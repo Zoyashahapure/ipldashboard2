@@ -45,15 +45,37 @@ if query:
         ax.set_xlabel("Team")
         st.pyplot(fig)
 
-    elif "top batsman" in query:
-        # Top 10 run scorers
-        top_scorers = deliveries.groupby('batsman')['batsman_runs'].sum().sort_values(ascending=False).head(10)
+      elif "top batsmen" in q or "top run scorers" in q:
+        batsman_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
+        top_scorers = deliveries.groupby(batsman_col)['batsman_runs'].sum().sort_values(ascending=False).head(10)
         fig, ax = plt.subplots(figsize=(10,5))
         sns.barplot(x=top_scorers.values, y=top_scorers.index, ax=ax, color="yellow")
-        ax.set_title("Top 10 Run Scorers in IPL")
-        ax.set_xlabel("Total Runs")
+        ax.set_title("Top 10 Run Scorers")
+        ax.set_xlabel("Runs")
         ax.set_ylabel("Batsman")
         st.pyplot(fig)
 
-    else:
-        st.warning("Query not recognized. Try: 'top 5 teams', 'top batsman'.")
+     elif "top stadiums" in q:
+        stadium_wins = matches['venue'].value_counts().head(10)
+        fig, ax = plt.subplots(figsize=(10,5))
+        stadium_wins.plot(kind='bar', color='teal', ax=ax)
+        ax.set_title("Top 10 Stadiums by Number of Matches")
+        ax.set_ylabel("Matches")
+        ax.set_xlabel("Stadium")
+        st.pyplot(fig)
+
+      elif "top bowlers" in q or "top 5 bowlers" in q:
+        if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
+            wickets = deliveries[deliveries['player_dismissed'].notnull()].groupby('bowler').size().sort_values(ascending=False).head(5)
+            fig, ax = plt.subplots(figsize=(10,5))
+            wickets.plot(kind='bar', color='green', ax=ax)
+            ax.set_title("Top 5 Bowlers by Wickets")
+            ax.set_ylabel("Wickets")
+            ax.set_xlabel("Bowler")
+            st.pyplot(fig)
+         else:
+            st.warning("Deliveries dataset missing required columns for bowlers.")
+
+     else:
+        
+        st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
