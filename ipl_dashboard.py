@@ -67,14 +67,13 @@ if query:
     elif "top bowlers" in q or "top 5 bowlers" in q:
         if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
             wickets = deliveries[deliveries['player_dismissed'].notnull()].groupby('bowler').size().sort_values(ascending=False).head(5)
-            fig, ax = plt.subplots(figsize=(10,5))
-            wickets.plot(kind='bar', color='green', ax=ax)
+            fig, ax = plt.subplots(figsize=(8,8))
+            ax.pie(wickets.values, labels=wickets.index, autopct='%1.1f%%', startangle=90, colors=['green','lightgreen','darkgreen','lime','seagreen'])
             ax.set_title("Top 5 Bowlers by Wickets")
-            ax.set_ylabel("Wickets")
-            ax.set_xlabel("Bowler")
             st.pyplot(fig)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
