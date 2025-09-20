@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-st.markdown("""
+st.markdown(
     """
     <style>
     .stApp {
@@ -88,6 +88,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
