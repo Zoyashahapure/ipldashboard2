@@ -30,12 +30,12 @@ if matches is None or deliveries is None:
     st.stop()
 
 # ---------- Search Bar ----------
-query = st.text_input("Enter your query (e.g., top 5 teams, top batsmen):")
+query = st.text_input("Enter your query (e.g., top 5 teams, top batsmen, top stadiums, top bowlers):")
 
 if query:
-    query = query.lower()
+    q = query.lower()
 
-    if "top 5 teams" in query:
+    if "top 5 teams" in q:
         # Top 5 teams by wins
         team_wins = matches['winner'].value_counts().head(5)
         fig, ax = plt.subplots(figsize=(10,5))
@@ -45,7 +45,7 @@ if query:
         ax.set_xlabel("Team")
         st.pyplot(fig)
 
-      elif "top batsmen" in q or "top run scorers" in q:
+    elif "top batsmen" in q or "top run scorers" in q:
         batsman_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
         top_scorers = deliveries.groupby(batsman_col)['batsman_runs'].sum().sort_values(ascending=False).head(10)
         fig, ax = plt.subplots(figsize=(10,5))
@@ -55,7 +55,7 @@ if query:
         ax.set_ylabel("Batsman")
         st.pyplot(fig)
 
-     elif "top stadiums" in q:
+    elif "top stadiums" in q:
         stadium_wins = matches['venue'].value_counts().head(10)
         fig, ax = plt.subplots(figsize=(10,5))
         stadium_wins.plot(kind='bar', color='teal', ax=ax)
@@ -64,7 +64,7 @@ if query:
         ax.set_xlabel("Stadium")
         st.pyplot(fig)
 
-      elif "top bowlers" in q or "top 5 bowlers" in q:
+    elif "top bowlers" in q or "top 5 bowlers" in q:
         if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
             wickets = deliveries[deliveries['player_dismissed'].notnull()].groupby('bowler').size().sort_values(ascending=False).head(5)
             fig, ax = plt.subplots(figsize=(10,5))
@@ -73,9 +73,8 @@ if query:
             ax.set_ylabel("Wickets")
             ax.set_xlabel("Bowler")
             st.pyplot(fig)
-         else:
+        else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
 
-     else:
-        
+    else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
