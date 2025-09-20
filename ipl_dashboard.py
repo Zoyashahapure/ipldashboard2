@@ -24,18 +24,33 @@ query = st.text_input("Enter your query (e.g., top 5 teams, top 5 batsmen):")
 
 if query:
     if "top 5 teams" in query.lower():
-        team_wins = matches['winner'].value_counts().head(5)
-        st.subheader("Top 5 Winning Teams")
-        st.bar_chart(team_wins)
+
+# Top 5 teams by wins
+team_wins = matches['winner'].value_counts().head(5)
+
+plt.figure(figsize=(10,5))
+team_wins.plot(kind='bar', color='red')
+plt.title("Top 5 Teams by Wins")
+plt.ylabel("Number of Wins")
+plt.xlabel("Team")
+plt.show()
+
 
     elif "most winning team" in query.lower():
-        most_wins = matches['winner'].value_counts().idxmax()
-        st.success(f"The team with most wins is: {most_wins}")
+        team_wins = matches['winner'].value_counts().reset_index()
+team_wins.columns = ['Team', 'Wins']
 
-    elif "top 5 batsmen" in query.lower():
-        top_batsmen = deliveries.groupby('batter')['batsman_runs'].sum().sort_values(ascending=False).head(5)
-        st.subheader("Top 5 Batsmen (Total Runs)")
-        st.bar_chart(top_batsmen)
+plt.figure(figsize=(10,5))
+sns.barplot(data=team_wins, x="Wins", y="Team", color="blue")
+plt.title("Most Successful Teams in IPL")
+plt.show()
+
+    elif "top batsmen" in query.lower():
+        top_scorers = deliveries.groupby('batter')['batsman_runs'].sum().sort_values(ascending=False).head(10)
+plt.figure(figsize=(10,5))
+sns.barplot(x=top_scorers.values, y=top_scorers.index, color="yellow")
+plt.title("Top 10 Run Scorers in IPL")
+plt.show()
 
     else:
-        st.warning("Query not recognized. Try: 'top 5 teams', 'most winning team', 'top 5 batsmen'.")
+        st.warning("Query not recognized. Try: 'top 5 teams', 'most winning team', 'top batsmen'.")
