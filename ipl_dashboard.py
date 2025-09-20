@@ -6,7 +6,7 @@ import os
 st.markdown(r"""
     <style>
     .stApp {
-        background-image: url("bg.jpg");
+        background-image: url("https://drive.google.com/uc?export=download&id=1kDFVJzbX75p9H241jvO_V7M32VnHa-Mt");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -88,6 +88,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
