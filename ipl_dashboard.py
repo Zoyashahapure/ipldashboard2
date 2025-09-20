@@ -3,7 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #f0f8ff;  /* Light blue background */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 os.environ['STREAMLIT_CONFIG_DIR'] = os.path.join(os.path.expanduser("~"), ".streamlit")
 
 st.title("IPL Data Analysis Dashboard")
@@ -78,4 +87,5 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
