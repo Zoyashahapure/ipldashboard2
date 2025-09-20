@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import gdown
 import os
 
 os.environ['STREAMLIT_CONFIG_DIR'] = os.path.join(os.path.expanduser("~"), ".streamlit")
@@ -11,23 +10,32 @@ st.title("IPL Data Analysis Dashboard")
 
 # ---------- Load Data ----------
 @st.cache_data
-def load_data(file_id, filename):
-    url = f"https://drive.google.com/uc?id={file_id}"
-    gdown.download(url, filename, quiet=True)  # download CSV locally
-    return pd.read_csv(filename)
+def load_data(url):
+    try:
+        df = pd.read_csv(url)
+        return df
+    except Exception as e:
+        st.error(f"Failed to load data: {e}")
+        return None
 
-# Replace with your own Google Drive file IDs
-matches_file_id = "1ZCqwqbFRHdwHTCO4LWQezWB99LfynPJB"
-deliveries_file_id = "1kQXChtwZxkYrbzvVY5k4s-ffs6dVCVXK"
+# ---------- Google Drive direct download links ----------
+matches_url = "https://drive.google.com/uc?export=download&id=1ZCqwqbFRHdwHTCO4LWQezWB99LfynPJB"
+deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbzvVY5k4s-ffs6dVCVXK"
 
-matches = load_data(matches_file_id, "matches.csv")
-deliveries = load_data(deliveries_file_id, "deliveries.csv")
+matches = load_data(matches_url)
+deliveries = load_data(deliveries_url)
+
+# Stop app if data failed to load
+if matches is None or deliveries is None:
+    st.stop()
 
 # ---------- Search Bar ----------
 query = st.text_input("Enter your query (e.g., top 5 teams, top batsmen):")
 
 if query:
-    if "top 5 teams" in query.lower():
+    query = query.lower()
+
+    if "top 5 teams" in query:
         # Top 5 teams by wins
         team_wins = matches['winner'].value_counts().head(5)
         fig, ax = plt.subplots(figsize=(10,5))
@@ -35,15 +43,17 @@ if query:
         ax.set_title("Top 5 Teams by Wins")
         ax.set_ylabel("Number of Wins")
         ax.set_xlabel("Team")
-        st.pyplot(fig)  # display matplotlib figure in Streamlit
+        st.pyplot(fig)
 
-    elif "top batsmen" in query.lower():
+    elif "top batsman" in query:
         # Top 10 run scorers
         top_scorers = deliveries.groupby('batsman')['batsman_runs'].sum().sort_values(ascending=False).head(10)
         fig, ax = plt.subplots(figsize=(10,5))
         sns.barplot(x=top_scorers.values, y=top_scorers.index, ax=ax, color="yellow")
         ax.set_title("Top 10 Run Scorers in IPL")
+        ax.set_xlabel("Total Runs")
+        ax.set_ylabel("Batsman")
         st.pyplot(fig)
 
     else:
-        st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen'.")
+        st.warning("Query not recognized. Try: 'top 5 teams', 'top batsman'.")
