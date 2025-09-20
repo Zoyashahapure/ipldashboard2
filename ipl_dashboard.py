@@ -7,7 +7,10 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color: #f0f8ff;  /* Light blue background */
+        background-image: url("C:\Users\Zoya Shahapure\OneDrive\Gambar\bg.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
     </style>
     """,
@@ -87,5 +90,6 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
