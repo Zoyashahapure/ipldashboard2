@@ -35,16 +35,6 @@ plt.ylabel("Number of Wins")
 plt.xlabel("Team")
 plt.show()
 
-
-    elif "most winning team" in query.lower():
-        team_wins = matches['winner'].value_counts().reset_index()
-team_wins.columns = ['Team', 'Wins']
-
-plt.figure(figsize=(10,5))
-sns.barplot(data=team_wins, x="Wins", y="Team", color="blue")
-plt.title("Most Successful Teams in IPL")
-plt.show()
-
     elif "top batsmen" in query.lower():
         top_scorers = deliveries.groupby('batter')['batsman_runs'].sum().sort_values(ascending=False).head(10)
 plt.figure(figsize=(10,5))
