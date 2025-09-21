@@ -47,7 +47,7 @@ if query:
         # Top 5 teams by wins
         team_wins = matches['winner'].value_counts().head(5)
         fig, ax = plt.subplots(figsize=(10,5))
-        team_wins.barplot(x=team_wins.values, y=team_wins.index, ax=ax, palette="viridis")
+        team_wins.plot(kind='bar', color='#5D688A', ax=ax)
         ax.set_title("Top 5 Teams by Wins")
         ax.set_ylabel("Number of Wins")
         ax.set_xlabel("Team")
