@@ -47,7 +47,7 @@ if query:
         # Top 5 teams by wins
         team_wins = matches['winner'].value_counts().head(5)
         fig, ax = plt.subplots(figsize=(10,5))
-        team_wins.plot(kind='bar', color='#5D688A', ax=ax)
+        team_wins.plot(kind='bar', palette="viridis", ax=ax)
         ax.set_title("Top 5 Teams by Wins")
         ax.set_ylabel("Number of Wins")
         ax.set_xlabel("Team")
@@ -86,6 +86,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
