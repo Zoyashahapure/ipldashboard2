@@ -22,8 +22,19 @@ h1 {
 os.environ['STREAMLIT_CONFIG_DIR'] = os.path.join(os.path.expanduser("~"), ".streamlit")
 import streamlit as st
 
-st.image("download.jpg", width=80)  # Logo from repo root
-st.title("IPL Data Analysis Dashboard")
+# ---------- Header with Logo ----------
+logo_url = "download.jpg"  # replace with your logo
+col1, col2 = st.columns([1, 6])
+
+with col1:
+    st.image(logo_url, width=80)  # adjust width as needed
+
+with col2:
+    st.markdown(
+        "<h1 style='color:#22223b; text-align:left; font-family:Helvetica;'>IPL Data Analysis Dashboard</h1>",
+        unsafe_allow_html=True
+    )
+
 
 
 
@@ -95,6 +106,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
