@@ -27,7 +27,7 @@ logo_url = "images.png"  # replace with your logo
 col1, col2 = st.columns([1, 6])
 
 with col1:
-    st.image(logo_url,width=100, use_column_width=False, output_format="auto")  # adjust width as needed
+    st.image(logo_url,width=100)  # adjust width as needed
 
 with col2:
     st.markdown(
