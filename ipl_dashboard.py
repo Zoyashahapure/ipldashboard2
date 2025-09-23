@@ -40,10 +40,22 @@ if matches is None or deliveries is None:
     st.stop()
 
 # ---------- Metrics ----------
-col1, col2, col3 = st.columns(3)
-col1.metric("Total Matches", matches.shape[0])
-col2.metric("Unique Teams", matches['team1'].nunique())
-col3.metric("Unique Stadiums", matches['venue'].nunique())
+metrics_df = pd.DataFrame({
+    "Metric": ["Total Matches", "Unique Teams", "Unique Stadiums"],
+    "Value": [matches.shape[0], matches['team1'].nunique(), matches['venue'].nunique()]
+})
+
+# Plotly bar chart
+fig = px.bar(
+    metrics_df,
+    x="Metric",
+    y="Value",
+    color="Value",  # color varies by value
+    text="Value",   # show the number on top of the bar
+    title="IPL Metrics Overview"
+)
+
+st.plotly_chart(fig, use_container_width=True)
 
 # ---------- Analysis Option ----------
 option = st.selectbox(
@@ -87,3 +99,4 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
