@@ -7,6 +7,7 @@ st.markdown(r"""
     <style>
     .stApp {
         background-color: #000080; 
+        color: white;
 
     }
     </style>
@@ -86,6 +87,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
