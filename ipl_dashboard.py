@@ -45,15 +45,11 @@ metrics_df = pd.DataFrame({
     "Value": [matches.shape[0], matches['team1'].nunique(), matches['venue'].nunique()]
 })
 
-# Plotly bar chart
-fig = px.bar(
-    metrics_df,
-    x="Metric",
-    y="Value",
-    color="Value",  # color varies by value
-    text="Value",   # show the number on top of the bar
-    title="IPL Metrics Overview"
-)
+fig = px.pie(metrics_df, names='Metric', values='Value', 
+             title='IPL Metrics Overview', 
+             color='Metric', 
+             color_discrete_sequence=px.colors.qualitative.Pastel,
+             hole=0.4)  # donut chart
 
 st.plotly_chart(fig, use_container_width=True)
 
@@ -99,4 +95,5 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
