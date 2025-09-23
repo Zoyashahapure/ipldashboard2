@@ -45,27 +45,13 @@ col1.markdown("🏏 **Total Matches**: {}".format(matches.shape[0]))
 col2.markdown("🌟 **Unique Teams**: {}".format(matches['team1'].nunique()))
 col3.markdown("🏟️ **Unique Stadiums**: {}".format(matches['venue'].nunique()))
  
-tab1, tab2 = st.tabs(["Metrics Overview", "Detailed Analysis"])
 
-with tab1:
-    # Show metrics as charts or indicators instead of st.metric
-    metrics_df = pd.DataFrame({
-        "Metric": ["Total Matches", "Unique Teams", "Unique Stadiums"],
-        "Value": [matches.shape[0], matches['team1'].nunique(), matches['venue'].nunique()]
-    })
-
-    fig = px.pie(metrics_df, names='Metric', values='Value', hole=0.4, 
-                 color='Metric', color_discrete_sequence=px.colors.qualitative.Pastel,
-                 title="IPL Metrics Overview")
-    st.plotly_chart(fig, use_container_width=True)
-
-with tab2:
-    # Show detailed analysis dropdown and charts
-    option = st.selectbox(
+    
+# ---------- Analysis Option ----------
+option = st.selectbox(
         "Choose analysis:",
         ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums", "Top Bowlers"]
     )
-# ---------- Analysis Option ----------
 
 if option != "Select...":
     
@@ -103,6 +89,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
