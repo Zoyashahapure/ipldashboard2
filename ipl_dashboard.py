@@ -10,15 +10,9 @@ st.markdown(r"""
         color: white;
 
     }
-    div[data-baseweb="input"] > div {
-        background-color: white !important;
-        color: black !important;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        }
-        div[data-baseweb="input"] input::placeholder {
+    label[data-testid="stWidgetLabel"] > div:nth-child(1) {
         color: white !important;
-        opacity: 1; 
+        font-weight: bold;
         }
     </style>
     """, unsafe_allow_html=True)
@@ -97,6 +91,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
