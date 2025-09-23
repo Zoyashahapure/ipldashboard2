@@ -61,7 +61,11 @@ with col3:
     st.metric("Unique Stadiums", matches['venue'].nunique())
 
 # ---------- Search Bar ----------
-query = st.text_input("Enter your query (e.g., top 5 teams, top batsmen, top stadiums, top bowlers):")
+option = st.selectbox(
+    "Choose analysis:",
+    ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums", "Top Bowlers"]
+)
+
 
 if query:
     q = query.lower()
@@ -109,6 +113,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
