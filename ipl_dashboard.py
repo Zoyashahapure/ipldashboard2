@@ -6,15 +6,24 @@ import os
 st.markdown(r"""
     <style>
     .stApp {
-         background-color: #e59797;
-        color: white;
-        
-
+        background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+        color: #2C2C2C;
     }
-    label[data-testid="stWidgetLabel"] > div:nth-child(1) {
-        color: white !important;
-        font-weight: bold;
-        }
+
+    /* Input box style */
+    .stTextInput > div > div > input {
+        background-color: white;
+        color: black;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+    }
+
+    /* Titles */
+    h1 {
+        color: #22223b;
+        text-align: center;
+        font-family: 'Helvetica', sans-serif;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -92,6 +101,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
