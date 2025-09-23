@@ -22,7 +22,7 @@ h1 {
 os.environ['STREAMLIT_CONFIG_DIR'] = os.path.join(os.path.expanduser("~"), ".streamlit")
 import streamlit as st
 
-st.image("logo.png", width=80)  # Logo from repo root
+st.image("download.jpg", width=80)  # Logo from repo root
 st.title("IPL Data Analysis Dashboard")
 
 
@@ -95,6 +95,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
