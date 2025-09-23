@@ -41,9 +41,10 @@ if matches is None or deliveries is None:
 
 # ---------- Metrics ----------
 col1, col2, col3 = st.columns(3)
-col1.metric("Total Matches", matches.shape[0])
-col2.metric("Unique Teams", matches['team1'].nunique())
-col3.metric("Unique Stadiums", matches['venue'].nunique()) 
+col1.markdown("🏏 **Total Matches**: {}".format(matches.shape[0]))
+col2.markdown("🌟 **Unique Teams**: {}".format(matches['team1'].nunique()))
+col3.markdown("🏟️ **Unique Stadiums**: {}".format(matches['venue'].nunique()))
+ 
 
 # ---------- Analysis Option ----------
 option = st.selectbox(
@@ -87,6 +88,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
