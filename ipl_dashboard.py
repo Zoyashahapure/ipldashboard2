@@ -66,10 +66,8 @@ option = st.selectbox(
     ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums", "Top Bowlers"]
 )
 
-
-
-
-    if "top 5 teams" in q:
+if option != "Select...":  # only run if the user selected something
+    if option == "Top 5 Teams":
         # Top 5 teams by wins
         team_wins = matches['winner'].value_counts().head(5)
         fig, ax = plt.subplots(figsize=(10,5))
@@ -79,7 +77,7 @@ option = st.selectbox(
         ax.set_xlabel("Team")
         st.pyplot(fig)
 
-    elif "top batsmen" in q or "top run scorers" in q:
+    elif option == "Top Batsmen":
         batsman_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
         top_scorers = deliveries.groupby(batsman_col)['batsman_runs'].sum().sort_values(ascending=False).head(10)
         fig, ax = plt.subplots(figsize=(10,5))
@@ -89,7 +87,7 @@ option = st.selectbox(
         ax.set_ylabel("Batsman")
         st.pyplot(fig)
 
-    elif "top stadiums" in q:
+    elif option == "Top Stadiums":
         stadium_wins = matches['venue'].value_counts().head(10)
         fig, ax = plt.subplots(figsize=(10,5))
         stadium_wins.plot(kind='bar', color='#007074', ax=ax)
@@ -98,9 +96,10 @@ option = st.selectbox(
         ax.set_xlabel("Stadium")
         st.pyplot(fig)
 
-    elif "top bowlers" in q or "top 5 bowlers" in q:
+    elif option == "Top Bowlers":
         if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
-            wickets = deliveries[deliveries['player_dismissed'].notnull()].groupby('bowler').size().sort_values(ascending=False).head(5)
+            wickets = deliveries[deliveries['player_dismissed'].notnull()] \
+                        .groupby('bowler').size().sort_values(ascending=False).head(5)
             fig, ax = plt.subplots(figsize=(10,5))
             wickets.plot(kind='bar', color='#FF6464', ax=ax)
             ax.set_title("Top 5 Bowlers by Wickets")
@@ -109,9 +108,6 @@ option = st.selectbox(
             st.pyplot(fig)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
-
-    else:
-        st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
 
 
 
