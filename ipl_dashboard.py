@@ -67,8 +67,7 @@ option = st.selectbox(
 )
 
 
-if query:
-    q = query.lower()
+
 
     if "top 5 teams" in q:
         # Top 5 teams by wins
@@ -113,6 +112,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
