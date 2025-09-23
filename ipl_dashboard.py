@@ -75,7 +75,7 @@ if option != "Select...":
         stadium_wins = matches['venue'].value_counts().head(10).reset_index()
         stadium_wins.columns = ['Stadium', 'Matches']
         fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',
-                     color='Matches', text='Matches', title="Top 10 Stadiums by Matches",color_continuous_scale='Magma')
+                     color='Matches', text='Matches', title="Top 10 Stadiums by Matches",color_continuous_scale='oranges')
         st.plotly_chart(fig, use_container_width=True)
 
     # ----- Top Bowlers -----
@@ -89,6 +89,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
