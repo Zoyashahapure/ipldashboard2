@@ -40,18 +40,10 @@ if matches is None or deliveries is None:
     st.stop()
 
 # ---------- Metrics ----------
-metrics_df = pd.DataFrame({
-    "Metric": ["Total Matches", "Unique Teams", "Unique Stadiums"],
-    "Value": [matches.shape[0], matches['team1'].nunique(), matches['venue'].nunique()]
-})
-
-fig = px.pie(metrics_df, names='Metric', values='Value', 
-             title='IPL Metrics Overview', 
-             color='Metric', 
-             color_discrete_sequence=px.colors.qualitative.Pastel,
-             hole=0.4)  # donut chart
-
-st.plotly_chart(fig, use_container_width=True)
+col1, col2, col3 = st.columns(3)
+col1.metric("Total Matches", matches.shape[0])
+col2.metric("Unique Teams", matches['team1'].nunique())
+col3.metric("Unique Stadiums", matches['venue'].nunique()) 
 
 # ---------- Analysis Option ----------
 option = st.selectbox(
@@ -95,5 +87,6 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
