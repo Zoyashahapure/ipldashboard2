@@ -23,7 +23,7 @@ os.environ['STREAMLIT_CONFIG_DIR'] = os.path.join(os.path.expanduser("~"), ".str
 import streamlit as st
 
 # ---------- Header with Logo ----------
-logo_url = "download.jpg"  # replace with your logo
+logo_url = "ipl.jpg"  # replace with your logo
 col1, col2 = st.columns([1, 6])
 
 with col1:
@@ -106,6 +106,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
