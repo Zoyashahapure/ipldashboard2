@@ -8,9 +8,10 @@ st.markdown(r"""
     .stApp {
         background-color: #e59797; 
         color: white;
-        background-image: url("https://drive.google.com/file/d/1kDFVJzbX75p9H241jvO_V7M32VnHa-Mt/view?usp=sharing");
+        background-image: url("https://drive.google.com/uc?export=view&id=1kDFVJzbX75p9H241jvO_V7M32VnHa-Mt");
         background-size: cover;
         background-repeat: no-repeat;
+
         background-attachment: fixed;
 
     }
@@ -95,6 +96,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
