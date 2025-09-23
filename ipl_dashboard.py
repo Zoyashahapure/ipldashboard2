@@ -7,7 +7,8 @@ import os
 st.markdown(r"""
 <style>
 .stApp {
-    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    background: radial-gradient(circle, #f6d365 0%, #fda085 100%);
+
     color: #2C2C2C;
 }
 h1 {
@@ -89,6 +90,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
