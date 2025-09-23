@@ -10,6 +10,11 @@ st.markdown(r"""
         color: white;
 
     }
+    div[data-baseweb="input"] > div {
+        background-color: white !important;
+        color: black !important;
+        border-radius: 8px;
+        border: 1px solid #ccc;
     </style>
     """, unsafe_allow_html=True)
 
@@ -87,6 +92,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
