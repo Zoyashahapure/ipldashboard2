@@ -59,7 +59,7 @@ if option != "Select...":
     if option == "Top 5 Teams":
         team_wins = matches['winner'].value_counts().head(5).reset_index()
         team_wins.columns = ['Team', 'Wins']
-        fig = px.bar(team_wins, x='Team', y='Wins', color='Wins', text='Wins', title="Top 5 Teams by Wins",color_continuous_scale='Turbo')
+        fig = px.bar(team_wins, x='Team', y='Wins', color='Wins', text='Wins', title="Top 5 Teams by Wins",color_continuous_scale='Blues')
         st.plotly_chart(fig, use_container_width=True)
 
     # ----- Top Batsmen -----
@@ -75,7 +75,7 @@ if option != "Select...":
         stadium_wins = matches['venue'].value_counts().head(10).reset_index()
         stadium_wins.columns = ['Stadium', 'Matches']
         fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',
-                     color='Matches', text='Matches', title="Top 10 Stadiums by Matches")
+                     color='Matches', text='Matches', title="Top 10 Stadiums by Matches",color_continuous_scale='Electric')
         st.plotly_chart(fig, use_container_width=True)
 
     # ----- Top Bowlers -----
@@ -85,10 +85,11 @@ if option != "Select...":
                       .groupby('bowler').size().sort_values(ascending=False).head(5).reset_index()
             wickets.columns = ['Bowler', 'Wickets']
             fig = px.bar(wickets, x='Wickets', y='Bowler', orientation='h',
-                         color='Wickets', text='Wickets', title="Top 5 Bowlers by Wickets")
+                         color='Wickets', text='Wickets', title="Top 5 Bowlers by Wickets",color_continuous_scale='Rainbow')
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
