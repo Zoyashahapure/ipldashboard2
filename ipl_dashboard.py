@@ -57,7 +57,7 @@ if option != "Select...":
     if option == "Top 5 Teams":
         team_wins = matches['winner'].value_counts().head(5).reset_index()
         team_wins.columns = ['Team', 'Wins']
-        fig = px.bar(team_wins, x='Team', y='Wins', color='Wins', text='Wins', title="Top 5 Teams by Wins")
+        fig = px.bar(team_wins, x='Team', y='Wins', color='Wins', text='Wins', title="Top 5 Teams by Wins",color_continuous_scale='Viridis')
         st.plotly_chart(fig, use_container_width=True)
 
     # ----- Top Batsmen -----
@@ -87,6 +87,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
