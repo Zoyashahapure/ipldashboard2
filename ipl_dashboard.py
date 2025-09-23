@@ -6,7 +6,7 @@ import os
 st.markdown(r"""
     <style>
     .stApp {
-        background-color: #EBD9D1;  /* Light blue background */
+        background-color: #000080; 
 
     }
     </style>
@@ -86,6 +86,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
