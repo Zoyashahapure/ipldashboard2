@@ -6,13 +6,9 @@ import os
 st.markdown(r"""
     <style>
     .stApp {
-        
+         background-color: #e59797;
         color: white;
-        background-image: url("bg.jpg");
-        background-size: cover;
-        background-repeat: no-repeat;
-
-        background-attachment: fixed;
+        
 
     }
     label[data-testid="stWidgetLabel"] > div:nth-child(1) {
@@ -96,6 +92,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
