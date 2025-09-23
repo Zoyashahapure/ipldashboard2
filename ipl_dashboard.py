@@ -15,6 +15,11 @@ st.markdown(r"""
         color: black !important;
         border-radius: 8px;
         border: 1px solid #ccc;
+        }
+        div[data-baseweb="input"] input::placeholder {
+        color: white !important;
+        opacity: 1; 
+        }
     </style>
     """, unsafe_allow_html=True)
 
@@ -92,6 +97,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
