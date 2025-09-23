@@ -30,13 +30,6 @@ st.markdown(r"""
 os.environ['STREAMLIT_CONFIG_DIR'] = os.path.join(os.path.expanduser("~"), ".streamlit")
 
 st.title("IPL Data Analysis Dashboard")
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.metric("Total Matches", matches.shape[0])
-with col2:
-    st.metric("Unique Teams", matches['team1'].nunique())
-with col3:
-    st.metric("Unique Stadiums", matches['venue'].nunique())
 
 # ---------- Load Data ----------
 @st.cache_data
@@ -58,6 +51,14 @@ deliveries = load_data(deliveries_url)
 # Stop app if data failed to load
 if matches is None or deliveries is None:
     st.stop()
+
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Total Matches", matches.shape[0])
+with col2:
+    st.metric("Unique Teams", matches['team1'].nunique())
+with col3:
+    st.metric("Unique Stadiums", matches['venue'].nunique())
 
 # ---------- Search Bar ----------
 query = st.text_input("Enter your query (e.g., top 5 teams, top batsmen, top stadiums, top bowlers):")
@@ -108,6 +109,7 @@ if query:
 
     else:
         st.warning("Query not recognized. Try: 'top 5 teams', 'top batsmen', 'top stadiums', 'top bowlers'.")
+
 
 
 
