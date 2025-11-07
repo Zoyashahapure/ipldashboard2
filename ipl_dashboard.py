@@ -109,7 +109,7 @@ if option != "Select...":
         sixes = deliveries[deliveries['batsman_runs'] == 6][bat_col].value_counts().head(10).reset_index()
         sixes.columns = ['Batsman', 'Sixes']
         fig = px.bar(
-            sixes, x='Sixes', y='Batsman', orientation='h', color='Batsman',
+            sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
             text='Sixes', title="💣 Top 10 Six Hitters",
             color_continuous_scale='Pinkyl', template='plotly_white'
         )
@@ -121,7 +121,7 @@ if option != "Select...":
         fours = deliveries[deliveries['batsman_runs'] == 4][bat_col].value_counts().head(10).reset_index()
         fours.columns = ['Batsman', 'Fours']
         fig = px.bar(
-            fours, x='Fours', y='Batsman', orientation='h', color='Batsman',
+            fours, x='Fours', y='Batsman', orientation='h', color='Fours',
             text='Fours', title="🔥 Top 10 Boundary Hitters",
             color_continuous_scale='Tealrose', template='plotly_white'
         )
@@ -151,6 +151,7 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
 
