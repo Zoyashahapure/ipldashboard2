@@ -80,7 +80,10 @@ if option != "Select...":
     # ----- Top Batsmen -----
     elif option == "Top Batsmen":
         batsman_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
-        top_scorers = deliveries.groupby(batsman_col)['batsman_runs'].sum().sort_values(ascending=False).head(10).reset_index()
+        top_scorers = (
+            deliveries.groupby(batsman_col)['batsman_runs']
+            .sum().sort_values(ascending=False).head(10).reset_index()
+        )
         fig = px.bar(
             top_scorers, x='batsman_runs', y=batsman_col, orientation='h',
             color='batsman_runs', text='batsman_runs',
@@ -102,7 +105,8 @@ if option != "Select...":
 
     # ----- Most Sixes -----
     elif option == "Most Sixes":
-        sixes = deliveries[deliveries['batsman_runs'] == 6]['batsman'].value_counts().head(10).reset_index()
+        bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
+        sixes = deliveries[deliveries['batsman_runs'] == 6][bat_col].value_counts().head(10).reset_index()
         sixes.columns = ['Batsman', 'Sixes']
         fig = px.bar(
             sixes, x='Sixes', y='Batsman', orientation='h', color='Batsman',
@@ -113,7 +117,8 @@ if option != "Select...":
 
     # ----- Most Fours -----
     elif option == "Most Fours":
-        fours = deliveries[deliveries['batsman_runs'] == 4]['batsman'].value_counts().head(10).reset_index()
+        bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
+        fours = deliveries[deliveries['batsman_runs'] == 4][bat_col].value_counts().head(10).reset_index()
         fours.columns = ['Batsman', 'Fours']
         fig = px.bar(
             fours, x='Fours', y='Batsman', orientation='h', color='Batsman',
@@ -132,8 +137,10 @@ if option != "Select...":
     # ----- Top Bowlers -----
     elif option == "Top Bowlers":
         if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
-            wickets = deliveries[deliveries['player_dismissed'].notnull()] \
+            wickets = (
+                deliveries[deliveries['player_dismissed'].notnull()]
                 .groupby('bowler').size().sort_values(ascending=False).head(5).reset_index()
+            )
             wickets.columns = ['Bowler', 'Wickets']
             fig = px.bar(
                 wickets, x='Wickets', y='Bowler', orientation='h',
