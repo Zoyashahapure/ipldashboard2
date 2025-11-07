@@ -75,7 +75,8 @@ col3.markdown("🏟️ **Unique Stadiums**: {}".format(matches['venue'].nunique(
 # ---------- Analysis Option ----------
 option = st.selectbox(
     "Choose analysis:",
-    ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums", "Top Bowlers"]
+    ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums", "Top Bowlers",
+         "Team Wins by Season", "Most Sixes", "Most Fours", "Matches by City"]
 )
 
 if option != "Select...":
@@ -113,6 +114,34 @@ if option != "Select...":
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    elif option == "Most Sixes":
+    sixes = deliveries[deliveries['batsman_runs'] == 6]['batsman'].value_counts().head(10).reset_index()
+    sixes.columns = ['Batsman', 'Sixes']
+    fig = px.bar(
+        sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
+        text='Sixes', title="💣 Top 10 Six Hitters", color_discrete_sequence=['#FF6347']
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    elif option == "Most Fours":
+    fours = deliveries[deliveries['batsman_runs'] == 4]['batsman'].value_counts().head(10).reset_index()
+    fours.columns = ['Batsman', 'Fours']
+    fig = px.bar(
+        fours, x='Fours', y='Batsman', orientation='h', color='Fours',
+        text='Fours', title="🔥 Top 10 Boundary Hitters", color_discrete_sequence=['#FFD700']
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+elif option == "Matches by City":
+    city_count = matches['city'].value_counts().head(10).reset_index()
+    city_count.columns = ['City', 'Matches']
+    fig = px.pie(
+        city_count, names='City', values='Matches',
+        title="🗺️ Matches Hosted per City"
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
     # ----- Top Bowlers -----
     elif option == "Top Bowlers":
         if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
@@ -128,4 +157,5 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
