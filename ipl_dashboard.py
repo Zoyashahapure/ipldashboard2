@@ -178,4 +178,7 @@ def show_dashboard():
         else:
             st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
 
-
+if not st.session_state.authenticated:
+    login()
+else:
+    show_dashboard()
