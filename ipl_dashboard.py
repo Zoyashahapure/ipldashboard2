@@ -174,3 +174,5 @@ def show_dashboard():
             )
             st.plotly_chart(fig, use_container_width=True)
         else:
+        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
+
