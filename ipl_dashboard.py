@@ -19,7 +19,7 @@ h1 {
 """, unsafe_allow_html=True)
 
 # ---------- Header with Logo ----------
-logo_url = "images.png"  # replace with your logo
+logo_url = "images.png"
 col1, col2 = st.columns([1, 6])
 
 with col1:
@@ -48,6 +48,25 @@ deliveries = load_data(deliveries_url)
 
 if matches is None or deliveries is None:
     st.stop()
+
+# ---------- 🧹 Data Cleaning ----------
+st.subheader("🧹 Data Cleaning")
+
+# Remove duplicates
+matches.drop_duplicates(inplace=True)
+deliveries.drop_duplicates(inplace=True)
+
+# Remove rows with all nulls
+matches.dropna(how='all', inplace=True)
+deliveries.dropna(how='all', inplace=True)
+
+# Fill missing values in key columns
+matches['winner'].fillna('No Result', inplace=True)
+matches['venue'].fillna('Unknown Venue', inplace=True)
+deliveries['batsman_runs'].fillna(0, inplace=True)
+
+
+st.success("Data cleaned successfully! ✅")
 
 # ---------- Metrics ----------
 col1, col2, col3 = st.columns(3)
