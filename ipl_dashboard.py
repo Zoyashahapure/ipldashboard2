@@ -2,14 +2,17 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# ---------- Styling ----------
+# ---------- Page Setup ----------
+st.set_page_config(page_title="IPL Data Analysis Dashboard", layout="wide")
+
+# ---------- Basic CSS ----------
 st.markdown(r"""
 <style>
 .stApp {
     background: radial-gradient(circle, #f6d365 0%, #fda085 100%);
     color: #2C2C2C;
 }
-h1 {
+h1, h2 {
     color: #22223b;
     text-align: center;
     font-family: 'Helvetica', sans-serif;
@@ -17,124 +20,147 @@ h1 {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- Header with Logo ----------
-logo_url = "images.png"
-col1, col2 = st.columns([1, 6])
-with col1:
-    st.image(logo_url, width=100)
-with col2:
-    st.markdown(
-        "<h1 style='color:#22223b; text-align:left; font-family:Helvetica;'>IPL Data Analysis Dashboard</h1>",
-        unsafe_allow_html=True
+# ---------- Authentication Setup ----------
+# Define your usernames and passwords here (you can add more users)
+USER_CREDENTIALS = {
+    "admin": "1234",
+    "zoya": "zoya73",
+}
+
+# Initialize session state for login
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+# ---------- Login Page ----------
+def login():
+    st.markdown("<h1>🔒 Login to IPL Dashboard</h1>", unsafe_allow_html=True)
+    username = st.text_input("👤 Username")
+    password = st.text_input("🔑 Password", type="password")
+
+    if st.button("Login"):
+        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
+            st.session_state.authenticated = True
+            st.success("✅ Login successful!")
+            st.rerun()
+        else:
+            st.error("❌ Invalid username or password")
+
+# ---------- Logout Function ----------
+def logout():
+    st.session_state.authenticated = False
+    st.warning("👋 Logged out successfully.")
+    st.rerun()
+
+# ---------- Main Dashboard ----------
+def show_dashboard():
+    # ----- Header -----
+    logo_url = "images.png"
+    col1, col2 = st.columns([1, 6])
+    with col1:
+        st.image(logo_url, width=100)
+    with col2:
+        st.markdown(
+            "<h1 style='text-align:left;'>IPL Data Analysis Dashboard</h1>",
+            unsafe_allow_html=True
+        )
+
+    st.sidebar.button("🚪 Logout", on_click=logout)
+
+    # ----- Load Data -----
+    @st.cache_data
+    def load_data(url):
+        try:
+            return pd.read_csv(url)
+        except Exception as e:
+            st.error(f"Failed to load data: {e}")
+            return None
+
+    matches_url = "https://drive.google.com/uc?export=download&id=1ZCqwqbFRHdwHTCO4LWQezWB99LfynPJB"
+    deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbzvVY5k4s-ffs6dVCVXK"
+
+    matches = load_data(matches_url)
+    deliveries = load_data(deliveries_url)
+
+    if matches is None or deliveries is None:
+        st.stop()
+
+    # ----- Clean Data -----
+    matches.drop_duplicates(inplace=True)
+    deliveries.drop_duplicates(inplace=True)
+    matches.fillna({'winner': 'No Result', 'venue': 'Unknown Venue'}, inplace=True)
+    deliveries['batsman_runs'].fillna(0, inplace=True)
+
+    # ----- Metrics -----
+    col1, col2, col3 = st.columns(3)
+    col1.markdown(f"🏏 **Total Matches**: {matches.shape[0]}")
+    col2.markdown(f"🌟 **Unique Teams**: {matches['team1'].nunique()}")
+    col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
+
+    # ----- Select Analysis -----
+    option = st.selectbox(
+        "Choose analysis:",
+        ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
+         "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City"]
     )
 
-# ---------- Load Data ----------
-@st.cache_data
-def load_data(url):
-    try:
-        return pd.read_csv(url)
-    except Exception as e:
-        st.error(f"Failed to load data: {e}")
-        return None
-
-matches_url = "https://drive.google.com/uc?export=download&id=1ZCqwqbFRHdwHTCO4LWQezWB99LfynPJB"
-deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbzvVY5k4s-ffs6dVCVXK"
-
-matches = load_data(matches_url)
-deliveries = load_data(deliveries_url)
-
-# ---------- 🧹 Data Cleaning ----------
-matches.drop_duplicates(inplace=True)
-deliveries.drop_duplicates(inplace=True)
-matches.dropna(how='all', inplace=True)
-deliveries.dropna(how='all', inplace=True)
-matches['winner'].fillna('No Result', inplace=True)
-matches['venue'].fillna('Unknown Venue', inplace=True)
-deliveries['batsman_runs'].fillna(0, inplace=True)
-
-# ---------- Metrics ----------
-col1, col2, col3 = st.columns(3)
-col1.markdown("🏏 **Total Matches**: {}".format(matches.shape[0]))
-col2.markdown("🌟 **Unique Teams**: {}".format(matches['team1'].nunique()))
-col3.markdown("🏟️ **Unique Stadiums**: {}".format(matches['venue'].nunique()))
-
-# ---------- Analysis Option ----------
-option = st.selectbox(
-    "Choose analysis:",
-    ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums", "Top Bowlers",
-     "Most Sixes", "Most Fours", "Matches by City"]
-)
-
-if option != "Select...":
-    # ----- Top 5 Teams -----
     if option == "Top 5 Teams":
         team_wins = matches['winner'].value_counts().head(5).reset_index()
         team_wins.columns = ['Team', 'Wins']
         fig = px.bar(
             team_wins, x='Team', y='Wins', color='Wins', text='Wins',
-            title="🏆 Top 5 Teams by Wins",
-            color_continuous_scale='Tealgrn', template='plotly_white'
+            title="🏆 Top 5 Teams by Wins", color_continuous_scale='Tealgrn'
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # ----- Top Batsmen -----
     elif option == "Top Batsmen":
-        batsman_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
+        bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
         top_scorers = (
-            deliveries.groupby(batsman_col)['batsman_runs']
+            deliveries.groupby(bat_col)['batsman_runs']
             .sum().sort_values(ascending=False).head(10).reset_index()
         )
         fig = px.bar(
-            top_scorers, x='batsman_runs', y=batsman_col, orientation='h',
+            top_scorers, x='batsman_runs', y=bat_col, orientation='h',
             color='batsman_runs', text='batsman_runs',
-            title="🏏 Top 10 Run Scorers", color_continuous_scale='Viridis', template='plotly_white'
+            title="🏏 Top 10 Run Scorers", color_continuous_scale='Viridis'
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # ----- Top Stadiums -----
     elif option == "Top Stadiums":
         stadium_wins = matches['venue'].value_counts().head(10).reset_index()
         stadium_wins.columns = ['Stadium', 'Matches']
         fig = px.bar(
             stadium_wins, x='Matches', y='Stadium', orientation='h',
-            color='Matches', text='Matches',
-            title="🏟️ Top 10 Stadiums by Matches",
-            color_continuous_scale='OrRd', template='plotly_white'
+            color='Matches', text='Matches', color_continuous_scale='OrRd'
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # ----- Most Sixes -----
     elif option == "Most Sixes":
         bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
         sixes = deliveries[deliveries['batsman_runs'] == 6][bat_col].value_counts().head(10).reset_index()
         sixes.columns = ['Batsman', 'Sixes']
         fig = px.bar(
             sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
-            text='Sixes', title="💣 Top 10 Six Hitters",
-            color_continuous_scale='Pinkyl', template='plotly_white'
+            text='Sixes', color_continuous_scale='Pinkyl'
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # ----- Most Fours -----
     elif option == "Most Fours":
         bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
         fours = deliveries[deliveries['batsman_runs'] == 4][bat_col].value_counts().head(10).reset_index()
         fours.columns = ['Batsman', 'Fours']
         fig = px.bar(
             fours, x='Fours', y='Batsman', orientation='h', color='Fours',
-            text='Fours', title="🔥 Top 10 Boundary Hitters",
-            color_continuous_scale='Tealrose', template='plotly_white'
+            text='Fours', color_continuous_scale='Sunset'
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # ----- Matches by City -----
     elif option == "Matches by City":
         city_count = matches['city'].value_counts().head(10).reset_index()
         city_count.columns = ['City', 'Matches']
-        fig = px.pie(city_count, names='City', values='Matches', title="🗺️ Matches Hosted per City")
+        fig = px.pie(city_count, names='City', values='Matches',
+                     title="🗺️ Matches Hosted per City")
         st.plotly_chart(fig, use_container_width=True)
 
-    # ----- Top Bowlers -----
     elif option == "Top Bowlers":
         if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
             wickets = (
@@ -143,17 +169,8 @@ if option != "Select...":
             )
             wickets.columns = ['Bowler', 'Wickets']
             fig = px.bar(
-                wickets, x='Wickets', y='Bowler', orientation='h',
-                color='Wickets', text='Wickets',
-                title="🎯 Top 5 Bowlers by Wickets",
-                color_continuous_scale='Sunset', template='plotly_white'
+                wickets, x='Wickets', y='Bowler', orientation='h', color='Wickets',
+                text='Wickets', color_continuous_scale='Agsunset'
             )
             st.plotly_chart(fig, use_container_width=True)
         else:
-            st.warning("Deliveries dataset missing required columns for bowlers.")
-
-
-
-
-
-
