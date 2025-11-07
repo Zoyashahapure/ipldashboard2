@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import os
 
 # ---------- Styling ----------
 st.markdown(r"""
@@ -21,10 +20,8 @@ h1 {
 # ---------- Header with Logo ----------
 logo_url = "images.png"
 col1, col2 = st.columns([1, 6])
-
 with col1:
     st.image(logo_url, width=100)
-
 with col2:
     st.markdown(
         "<h1 style='color:#22223b; text-align:left; font-family:Helvetica;'>IPL Data Analysis Dashboard</h1>",
@@ -46,25 +43,14 @@ deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbz
 matches = load_data(matches_url)
 deliveries = load_data(deliveries_url)
 
-
 # ---------- 🧹 Data Cleaning ----------
-
-
-# Remove duplicates
 matches.drop_duplicates(inplace=True)
 deliveries.drop_duplicates(inplace=True)
-
-# Remove rows with all nulls
 matches.dropna(how='all', inplace=True)
 deliveries.dropna(how='all', inplace=True)
-
-# Fill missing values in key columns
 matches['winner'].fillna('No Result', inplace=True)
 matches['venue'].fillna('Unknown Venue', inplace=True)
 deliveries['batsman_runs'].fillna(0, inplace=True)
-
-
-
 
 # ---------- Metrics ----------
 col1, col2, col3 = st.columns(3)
@@ -76,7 +62,7 @@ col3.markdown("🏟️ **Unique Stadiums**: {}".format(matches['venue'].nunique(
 option = st.selectbox(
     "Choose analysis:",
     ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums", "Top Bowlers",
-         "Team Wins by Season", "Most Sixes", "Most Fours", "Matches by City"]
+     "Most Sixes", "Most Fours", "Matches by City"]
 )
 
 if option != "Select...":
@@ -114,38 +100,34 @@ if option != "Select...":
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    # ----- Most Sixes -----
     elif option == "Most Sixes":
-    sixes = deliveries[deliveries['batsman_runs'] == 6]['batsman'].value_counts().head(10).reset_index()
-    sixes.columns = ['Batsman', 'Sixes']
-    fig = px.bar(
-        sixes, x='Sixes', y='Batsman', orientation='h', color='Batsman',
-        text='Sixes', title="💣 Top 10 Six Hitters",
-        color_discrete_sequence=['#FF6347'],  # tomato red
-        template='plotly_white'
-    )
-    st.plotly_chart(fig, use_container_width=True)
+        sixes = deliveries[deliveries['batsman_runs'] == 6]['batsman'].value_counts().head(10).reset_index()
+        sixes.columns = ['Batsman', 'Sixes']
+        fig = px.bar(
+            sixes, x='Sixes', y='Batsman', orientation='h', color='Batsman',
+            text='Sixes', title="💣 Top 10 Six Hitters",
+            color_discrete_sequence=['#FF6347'], template='plotly_white'
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-elif option == "Most Fours":
-    fours = deliveries[deliveries['batsman_runs'] == 4]['batsman'].value_counts().head(10).reset_index()
-    fours.columns = ['Batsman', 'Fours']
-    fig = px.bar(
-        fours, x='Fours', y='Batsman', orientation='h', color='Batsman',
-        text='Fours', title="🔥 Top 10 Boundary Hitters",
-        color_discrete_sequence=['#FFD700'],  # gold
-        template='plotly_white'
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    # ----- Most Fours -----
+    elif option == "Most Fours":
+        fours = deliveries[deliveries['batsman_runs'] == 4]['batsman'].value_counts().head(10).reset_index()
+        fours.columns = ['Batsman', 'Fours']
+        fig = px.bar(
+            fours, x='Fours', y='Batsman', orientation='h', color='Batsman',
+            text='Fours', title="🔥 Top 10 Boundary Hitters",
+            color_discrete_sequence=['#FFD700'], template='plotly_white'
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-
-elif option == "Matches by City":
-    city_count = matches['city'].value_counts().head(10).reset_index()
-    city_count.columns = ['City', 'Matches']
-    fig = px.pie(
-        city_count, names='City', values='Matches',
-        title="🗺️ Matches Hosted per City"
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
+    # ----- Matches by City -----
+    elif option == "Matches by City":
+        city_count = matches['city'].value_counts().head(10).reset_index()
+        city_count.columns = ['City', 'Matches']
+        fig = px.pie(city_count, names='City', values='Matches', title="🗺️ Matches Hosted per City")
+        st.plotly_chart(fig, use_container_width=True)
 
     # ----- Top Bowlers -----
     elif option == "Top Bowlers":
@@ -162,6 +144,3 @@ elif option == "Matches by City":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
-
-
-
