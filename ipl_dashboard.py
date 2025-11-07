@@ -46,11 +46,9 @@ deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbz
 matches = load_data(matches_url)
 deliveries = load_data(deliveries_url)
 
-if matches is None or deliveries is None:
-    st.stop()
 
 # ---------- 🧹 Data Cleaning ----------
-st.subheader("🧹 Data Cleaning")
+
 
 # Remove duplicates
 matches.drop_duplicates(inplace=True)
@@ -66,7 +64,7 @@ matches['venue'].fillna('Unknown Venue', inplace=True)
 deliveries['batsman_runs'].fillna(0, inplace=True)
 
 
-st.success("Data cleaned successfully! ✅")
+
 
 # ---------- Metrics ----------
 col1, col2, col3 = st.columns(3)
@@ -130,3 +128,4 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
