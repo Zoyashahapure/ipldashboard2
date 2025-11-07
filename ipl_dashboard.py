@@ -68,63 +68,46 @@ option = st.selectbox(
      "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City"]
 )
 
-# ---------- Top 5 Teams ----------
+# ---------- Display Analysis Based on Selection ----------
 if option == "Top 5 Teams":
     team_wins = matches['winner'].value_counts().head(5).reset_index()
     team_wins.columns = ['Team', 'Wins']
-    fig = px.bar(
-        team_wins, x='Team', y='Wins', color='Wins', text='Wins',
-        title="🏆 Top 5 Teams by Wins", color_continuous_scale='Tealgrn'
-    )
+    fig = px.bar(team_wins, x='Team', y='Wins', color='Wins', text='Wins',
+                 title="🏆 Top 5 Teams by Wins", color_continuous_scale='Tealgrn')
     st.plotly_chart(fig, use_container_width=True)
 
-# ---------- Top Batsmen ----------
 elif option == "Top Batsmen":
     bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
-    top_scorers = (
-        deliveries.groupby(bat_col)['batsman_runs']
-        .sum().sort_values(ascending=False).head(10).reset_index()
-    )
-    fig = px.bar(
-        top_scorers, x='batsman_runs', y=bat_col, orientation='h',
-        color='batsman_runs', text='batsman_runs',
-        title="🏏 Top 10 Run Scorers", color_continuous_scale='Viridis'
-    )
+    top_scorers = (deliveries.groupby(bat_col)['batsman_runs']
+                   .sum().sort_values(ascending=False).head(10).reset_index())
+    fig = px.bar(top_scorers, x='batsman_runs', y=bat_col, orientation='h',
+                 color='batsman_runs', text='batsman_runs',
+                 title="🏏 Top 10 Run Scorers", color_continuous_scale='Viridis')
     st.plotly_chart(fig, use_container_width=True)
 
-# ---------- Top Stadiums ----------
 elif option == "Top Stadiums":
     stadium_wins = matches['venue'].value_counts().head(10).reset_index()
     stadium_wins.columns = ['Stadium', 'Matches']
-    fig = px.bar(
-        stadium_wins, x='Matches', y='Stadium', orientation='h',
-        color='Matches', text='Matches', color_continuous_scale='OrRd'
-    )
+    fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',
+                 color='Matches', text='Matches', color_continuous_scale='OrRd')
     st.plotly_chart(fig, use_container_width=True)
 
-# ---------- Most Sixes ----------
 elif option == "Most Sixes":
     bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
     sixes = deliveries[deliveries['batsman_runs'] == 6][bat_col].value_counts().head(10).reset_index()
     sixes.columns = ['Batsman', 'Sixes']
-    fig = px.bar(
-        sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
-        text='Sixes', color_continuous_scale='Pinkyl'
-    )
+    fig = px.bar(sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
+                 text='Sixes', color_continuous_scale='Pinkyl')
     st.plotly_chart(fig, use_container_width=True)
 
-# ---------- Most Fours ----------
 elif option == "Most Fours":
     bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
     fours = deliveries[deliveries['batsman_runs'] == 4][bat_col].value_counts().head(10).reset_index()
     fours.columns = ['Batsman', 'Fours']
-    fig = px.bar(
-        fours, x='Fours', y='Batsman', orientation='h', color='Fours',
-        text='Fours', color_continuous_scale='Sunset'
-    )
+    fig = px.bar(fours, x='Fours', y='Batsman', orientation='h', color='Fours',
+                 text='Fours', color_continuous_scale='Sunset')
     st.plotly_chart(fig, use_container_width=True)
 
-# ---------- Matches by City ----------
 elif option == "Matches by City":
     city_count = matches['city'].value_counts().head(10).reset_index()
     city_count.columns = ['City', 'Matches']
@@ -132,18 +115,13 @@ elif option == "Matches by City":
                  title="🗺️ Matches Hosted per City")
     st.plotly_chart(fig, use_container_width=True)
 
-# ---------- Top Bowlers ----------
 elif option == "Top Bowlers":
     if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
-        wickets = (
-            deliveries[deliveries['player_dismissed'].notnull()]
-            .groupby('bowler').size().sort_values(ascending=False).head(5).reset_index()
-        )
+        wickets = (deliveries[deliveries['player_dismissed'].notnull()]
+                   .groupby('bowler').size().sort_values(ascending=False).head(5).reset_index())
         wickets.columns = ['Bowler', 'Wickets']
-        fig = px.bar(
-            wickets, x='Wickets', y='Bowler', orientation='h', color='Wickets',
-            text='Wickets', color_continuous_scale='Agsunset'
-        )
+        fig = px.bar(wickets, x='Wickets', y='Bowler', orientation='h', color='Wickets',
+                     text='Wickets', color_continuous_scale='Agsunset')
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
