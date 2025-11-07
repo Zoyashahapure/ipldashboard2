@@ -118,19 +118,24 @@ if option != "Select...":
     sixes = deliveries[deliveries['batsman_runs'] == 6]['batsman'].value_counts().head(10).reset_index()
     sixes.columns = ['Batsman', 'Sixes']
     fig = px.bar(
-        sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
-        text='Sixes', title="💣 Top 10 Six Hitters", color_discrete_sequence=['#FF6347']
+        sixes, x='Sixes', y='Batsman', orientation='h', color='Batsman',
+        text='Sixes', title="💣 Top 10 Six Hitters",
+        color_discrete_sequence=['#FF6347'],  # tomato red
+        template='plotly_white'
     )
     st.plotly_chart(fig, use_container_width=True)
 
-    elif option == "Most Fours":
+elif option == "Most Fours":
     fours = deliveries[deliveries['batsman_runs'] == 4]['batsman'].value_counts().head(10).reset_index()
     fours.columns = ['Batsman', 'Fours']
     fig = px.bar(
-        fours, x='Fours', y='Batsman', orientation='h', color='Fours',
-        text='Fours', title="🔥 Top 10 Boundary Hitters", color_discrete_sequence=['#FFD700']
+        fours, x='Fours', y='Batsman', orientation='h', color='Batsman',
+        text='Fours', title="🔥 Top 10 Boundary Hitters",
+        color_discrete_sequence=['#FFD700'],  # gold
+        template='plotly_white'
     )
     st.plotly_chart(fig, use_container_width=True)
+
 
 elif option == "Matches by City":
     city_count = matches['city'].value_counts().head(10).reset_index()
@@ -157,5 +162,6 @@ elif option == "Matches by City":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
