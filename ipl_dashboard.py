@@ -123,7 +123,7 @@ if option != "Select...":
         fig = px.bar(
             fours, x='Fours', y='Batsman', orientation='h', color='Batsman',
             text='Fours', title="🔥 Top 10 Boundary Hitters",
-            color_continuous_scale='inferno', template='plotly_white'
+            color_continuous_scale='Tealrose', template='plotly_white'
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -151,5 +151,6 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
 
 
