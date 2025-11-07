@@ -21,13 +21,11 @@ h1, h2 {
 """, unsafe_allow_html=True)
 
 # ---------- Authentication Setup ----------
-# Define your usernames and passwords here (you can add more users)
 USER_CREDENTIALS = {
     "admin": "1234",
     "zoya": "zoya73",
 }
 
-# Initialize session state for login
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -59,10 +57,7 @@ def show_dashboard():
     with col1:
         st.image(logo_url, width=100)
     with col2:
-        st.markdown(
-            "<h1 style='text-align:left;'>IPL Data Analysis Dashboard</h1>",
-            unsafe_allow_html=True
-        )
+        st.markdown("<h1 style='text-align:left;'>IPL Data Analysis Dashboard</h1>", unsafe_allow_html=True)
 
     st.sidebar.button("🚪 Logout", on_click=logout)
 
@@ -96,13 +91,14 @@ def show_dashboard():
     col2.markdown(f"🌟 **Unique Teams**: {matches['team1'].nunique()}")
     col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
 
-    # ----- Select Analysis -----
+    # ----- Analysis Selection -----
     option = st.selectbox(
         "Choose analysis:",
         ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
          "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City"]
     )
 
+    # ----- Top 5 Teams -----
     if option == "Top 5 Teams":
         team_wins = matches['winner'].value_counts().head(5).reset_index()
         team_wins.columns = ['Team', 'Wins']
@@ -112,6 +108,7 @@ def show_dashboard():
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    # ----- Top Batsmen -----
     elif option == "Top Batsmen":
         bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
         top_scorers = (
@@ -125,6 +122,7 @@ def show_dashboard():
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    # ----- Top Stadiums -----
     elif option == "Top Stadiums":
         stadium_wins = matches['venue'].value_counts().head(10).reset_index()
         stadium_wins.columns = ['Stadium', 'Matches']
@@ -134,6 +132,7 @@ def show_dashboard():
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    # ----- Most Sixes -----
     elif option == "Most Sixes":
         bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
         sixes = deliveries[deliveries['batsman_runs'] == 6][bat_col].value_counts().head(10).reset_index()
@@ -144,6 +143,7 @@ def show_dashboard():
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    # ----- Most Fours -----
     elif option == "Most Fours":
         bat_col = 'batsman' if 'batsman' in deliveries.columns else 'batter'
         fours = deliveries[deliveries['batsman_runs'] == 4][bat_col].value_counts().head(10).reset_index()
@@ -154,6 +154,7 @@ def show_dashboard():
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    # ----- Matches by City -----
     elif option == "Matches by City":
         city_count = matches['city'].value_counts().head(10).reset_index()
         city_count.columns = ['City', 'Matches']
@@ -161,6 +162,7 @@ def show_dashboard():
                      title="🗺️ Matches Hosted per City")
         st.plotly_chart(fig, use_container_width=True)
 
+    # ----- Top Bowlers -----
     elif option == "Top Bowlers":
         if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
             wickets = (
@@ -174,5 +176,6 @@ def show_dashboard():
             )
             st.plotly_chart(fig, use_container_width=True)
         else:
-        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
+            st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
+
 
