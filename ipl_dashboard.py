@@ -20,34 +20,6 @@ h1, h2 {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- Authentication Setup ----------
-USER_CREDENTIALS = {
-    "admin": "1234",
-    "zoya": "zoya73",
-}
-
-if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
-
-# ---------- Login Page ----------
-def login():
-    st.markdown("<h1>🔒 Login to IPL Dashboard</h1>", unsafe_allow_html=True)
-    username = st.text_input("👤 Username")
-    password = st.text_input("🔑 Password", type="password")
-
-    if st.button("Login"):
-        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
-            st.session_state.authenticated = True
-            st.success("✅ Login successful!")
-            st.rerun()
-        else:
-            st.error("❌ Invalid username or password")
-
-# ---------- Logout Function ----------
-def logout():
-    st.session_state.authenticated = False
-    st.warning("👋 Logged out successfully.")
-    st.rerun()
 
 # ---------- Main Dashboard ----------
 def show_dashboard():
@@ -178,7 +150,5 @@ def show_dashboard():
         else:
             st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
 
-if not st.session_state.authenticated:
-    login()
-else:
-    show_dashboard()
+
+
