@@ -24,7 +24,7 @@ h1, h2 {
 logo_url = "images.png"
 col1, col2 = st.columns([1, 6])
 with col1:
-    st.image(logo_url, width=100)
+    st.image(logo_url, width=50)
 with col2:
     st.markdown(
         "<h1 style='text-align:left;'>IPL Data Analysis Dashboard</h1>",
@@ -125,3 +125,4 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
+
