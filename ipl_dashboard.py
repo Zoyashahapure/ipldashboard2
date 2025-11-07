@@ -111,7 +111,7 @@ if option != "Select...":
         fig = px.bar(
             sixes, x='Sixes', y='Batsman', orientation='h', color='Batsman',
             text='Sixes', title="💣 Top 10 Six Hitters",
-            color_discrete_sequence=['#FF6347'], template='plotly_white'
+            color_continuous_scale='Plasma', template='plotly_white'
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -123,7 +123,7 @@ if option != "Select...":
         fig = px.bar(
             fours, x='Fours', y='Batsman', orientation='h', color='Batsman',
             text='Fours', title="🔥 Top 10 Boundary Hitters",
-            color_discrete_sequence=['#FFD700'], template='plotly_white'
+            color_continuous_scale='inferno', template='plotly_white'
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -151,3 +151,4 @@ if option != "Select...":
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.warning("Deliveries dataset missing required columns for bowlers.")
+
