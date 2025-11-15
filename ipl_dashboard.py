@@ -58,7 +58,7 @@ deliveries['batsman_runs'].fillna(0, inplace=True)
 # ---------- Metrics ----------
 col1, col2, col3 = st.columns(3)
 col1.markdown(f"🏏 **Total Matches**: {matches.shape[0]}")
-col2.markdown(f"🌟 **Unique Teams**: {matches['team1'].nunique()}")
+col2.markdown(f"👑 **Unique Teams**: {matches['team1'].nunique()}")
 col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
 
 # ---------- Analysis Selection ----------
@@ -88,7 +88,7 @@ elif option == "Top Batsmen":
 elif option == "Top Stadiums":
     stadium_wins = matches['venue'].value_counts().head(10).reset_index()
     stadium_wins.columns = ['Stadium', 'Matches']
-    fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',
+    fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',title=" 🏟️Top Stadiums",
                  color='Matches', text='Matches', color_continuous_scale='OrRd')
     st.plotly_chart(fig, use_container_width=True)
 
@@ -97,7 +97,7 @@ elif option == "Most Sixes":
     sixes = deliveries[deliveries['batsman_runs'] == 6][bat_col].value_counts().head(10).reset_index()
     sixes.columns = ['Batsman', 'Sixes']
     fig = px.bar(sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
-                 text='Sixes', color_continuous_scale='Pinkyl')
+                 title=" 💥Most Sixes",text='Sixes', color_continuous_scale='Pinkyl')
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Most Fours":
@@ -105,7 +105,7 @@ elif option == "Most Fours":
     fours = deliveries[deliveries['batsman_runs'] == 4][bat_col].value_counts().head(10).reset_index()
     fours.columns = ['Batsman', 'Fours']
     fig = px.bar(fours, x='Fours', y='Batsman', orientation='h', color='Fours',
-                 text='Fours', color_continuous_scale='Sunset')
+                 text='Fours', title=" 💥Most Fours", color_continuous_scale='Sunset')
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Matches by City":
@@ -125,6 +125,7 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
+
 
 
 
