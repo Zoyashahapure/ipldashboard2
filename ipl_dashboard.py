@@ -1,8 +1,60 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import mysql.connector
 
-# ---------- Page Setup ----------
+# ----------------------------------------------------
+# MYSQL CONNECTION
+# ----------------------------------------------------
+def connect_db():
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",                # change if you use another MySQL user
+        password="123@my",   # <<< CHANGE THIS
+        database="streamlit_app"
+    )
+
+conn = connect_db()
+cursor = conn.cursor()
+
+# Create table if not exists
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS login_logs (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255),
+        password VARCHAR(255)
+    )
+""")
+conn.commit()
+
+# ----------------------------------------------------
+# LOGIN SYSTEM (BEFORE DASHBOARD)
+# ----------------------------------------------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    st.title("Login Page")
+
+    username = st.text_input("Enter username")
+    password = st.text_input("Enter password", type="password")
+
+    if st.button("Login"):
+        if username.strip() == "" or password.strip() == "":
+            st.error("Username and password cannot be empty")
+        else:
+            query = "INSERT INTO login_logs (username, password) VALUES (%s, %s)"
+            cursor.execute(query, (username, password))
+            conn.commit()
+
+            st.session_state.logged_in = True
+            st.success("Login successful!")
+
+    st.stop()   # Stop here until login
+
+# ----------------------------------------------------
+# IPL DASHBOARD STARTS AFTER LOGIN
+# ----------------------------------------------------
 st.set_page_config(page_title="IPL Data Analysis Dashboard", layout="centered")
 
 # ---------- Basic CSS ----------
@@ -68,7 +120,7 @@ option = st.selectbox(
      "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City"]
 )
 
-# ---------- Display Analysis Based on Selection ----------
+# ---------- Display Analysis ----------
 if option == "Top 5 Teams":
     team_wins = matches['winner'].value_counts().head(5).reset_index()
     team_wins.columns = ['Team', 'Wins']
@@ -88,8 +140,9 @@ elif option == "Top Batsmen":
 elif option == "Top Stadiums":
     stadium_wins = matches['venue'].value_counts().head(10).reset_index()
     stadium_wins.columns = ['Stadium', 'Matches']
-    fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',title=" 🏟️Top Stadiums",
-                 color='Matches', text='Matches', color_continuous_scale='OrRd')
+    fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',
+                 title="🏟️ Top Stadiums", color='Matches', text='Matches',
+                 color_continuous_scale='OrRd')
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Most Sixes":
@@ -97,7 +150,7 @@ elif option == "Most Sixes":
     sixes = deliveries[deliveries['batsman_runs'] == 6][bat_col].value_counts().head(10).reset_index()
     sixes.columns = ['Batsman', 'Sixes']
     fig = px.bar(sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
-                 title=" 💥Most Sixes",text='Sixes', color_continuous_scale='Pinkyl')
+                 title="💥 Most Sixes", text='Sixes', color_continuous_scale='Pinkyl')
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Most Fours":
@@ -105,7 +158,7 @@ elif option == "Most Fours":
     fours = deliveries[deliveries['batsman_runs'] == 4][bat_col].value_counts().head(10).reset_index()
     fours.columns = ['Batsman', 'Fours']
     fig = px.bar(fours, x='Fours', y='Batsman', orientation='h', color='Fours',
-                 text='Fours', title=" 💥Most Fours", color_continuous_scale='Sunset')
+                 text='Fours', title="💥 Most Fours", color_continuous_scale='Sunset')
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Matches by City":
@@ -120,12 +173,9 @@ elif option == "Top Bowlers":
         wickets = (deliveries[deliveries['player_dismissed'].notnull()]
                    .groupby('bowler').size().sort_values(ascending=False).head(5).reset_index())
         wickets.columns = ['Bowler', 'Wickets']
-        fig = px.bar(wickets, x='Wickets', y='Bowler', orientation='h', color='Wickets',
-                     text='Wickets', color_continuous_scale='Agsunset')
+        fig = px.bar(wickets, x='Wickets', y='Bowler', orientation='h',
+                     color='Wickets', text='Wickets',
+                     color_continuous_scale='Agsunset')
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
-
-
-
-
