@@ -54,7 +54,7 @@ col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
 option = st.selectbox(
     "Choose analysis:",
     ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
-     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City"]
+     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City","Most Toss Wins"]
 )
 
 # ---------- Display Analysis Based on Selection ----------
@@ -104,6 +104,7 @@ elif option == "Matches by City":
     fig = px.pie(city_count, names='City', values='Matches',
                  title="🗺️ Matches Hosted per City")
     st.plotly_chart(fig, use_container_width=True)
+    
 elif option == "Most Toss Wins":
     toss_wins = matches['toss_winner'].value_counts().head(10).reset_index()
     toss_wins.columns = ['Team', 'Toss Wins']
@@ -126,3 +127,4 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
