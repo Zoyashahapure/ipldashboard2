@@ -109,7 +109,7 @@ elif option == "Most Toss Wins":
     toss_wins = matches['toss_winner'].value_counts().head(10).reset_index()
     toss_wins.columns = ['Team', 'Toss Wins']
 
-    fig = px.scatter(
+    fig = px.bar(
         toss_wins, x='Toss Wins', y='Team',
         orientation='h', color='Toss Wins',
         text='Toss Wins',
@@ -127,5 +127,6 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
 
 
