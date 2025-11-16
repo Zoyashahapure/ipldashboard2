@@ -31,7 +31,7 @@ with col2:
         unsafe_allow_html=True
     )
 
-# ---------- Load Data ----------
+# ---------- Load Data (Simple Version) ----------
 matches_url = "https://drive.google.com/uc?export=download&id=1ZCqwqbFRHdwHTCO4LWQezWB99LfynPJB"
 deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbzvVY5k4s-ffs6dVCVXK"
 
@@ -53,11 +53,8 @@ col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
 # ---------- Analysis Selection ----------
 option = st.selectbox(
     "Choose analysis:",
-    [
-        "Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
-        "Top Bowlers", "Most Sixes", "Most Fours",
-        "Matches by City", "Most Toss Wins"
-    ]
+    ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
+     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City"]
 )
 
 # ---------- Display Analysis Based on Selection ----------
@@ -107,19 +104,6 @@ elif option == "Matches by City":
     fig = px.pie(city_count, names='City', values='Matches',
                  title="🗺️ Matches Hosted per City")
     st.plotly_chart(fig, use_container_width=True)
-
-elif option == "Top Bowlers":
-    if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
-        wickets = (deliveries[deliveries['player_dismissed'].notnull()]
-                   .groupby('bowler').size().sort_values(ascending=False).head(5).reset_index())
-        wickets.columns = ['Bowler', 'Wickets']
-        fig = px.bar(wickets, x='Wickets', y='Bowler', orientation='h', color='Wickets',
-                     text='Wickets', color_continuous_scale='Agsunset')
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
-
-# ---------- NEW: MOST TOSS WINS ----------
 elif option == "Most Toss Wins":
     toss_wins = matches['toss_winner'].value_counts().head(10).reset_index()
     toss_wins.columns = ['Team', 'Toss Wins']
@@ -132,7 +116,13 @@ elif option == "Most Toss Wins":
         color_continuous_scale='Blues'
     )
     st.plotly_chart(fig, use_container_width=True)
-
-else:
-        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
-
+elif option == "Top Bowlers":
+    if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
+        wickets = (deliveries[deliveries['player_dismissed'].notnull()]
+                   .groupby('bowler').size().sort_values(ascending=False).head(5).reset_index())
+        wickets.columns = ['Bowler', 'Wickets']
+        fig = px.bar(wickets, x='Wickets', y='Bowler', orientation='h', color='Wickets',
+                     text='Wickets', color_continuous_scale='Agsunset')
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
