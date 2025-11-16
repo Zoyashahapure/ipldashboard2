@@ -98,19 +98,20 @@ elif option == "Most Fours":
                  text='Fours', title="💥 Most Fours", color_continuous_scale='Sunset')
     st.plotly_chart(fig, use_container_width=True)
     
-elif option == "Most Wide Balls":
-    if 'bowler' in deliveries.columns and 'extras_type' in deliveries.columns:
-        wide_balls = (deliveries.groupby('bowler')['wides']
-                      .sum().sort_values(ascending=False).head(10).reset_index())
-        wide_balls.columns = ['Bowler', 'Total_Wides']
+elif option == "Most Player of the Match":
+    if 'player_of_match' in matches.columns:
+        mom_counts = (matches['player_of_match'].value_counts().head(10).reset_index())
+        mom_counts.columns = ['Player', 'Awards']
         
-        fig = px.bar(
-            wide_balls, x='Total_Wides', y='Bowler', orientation='h',
-            color='Total_Wides', text='Total_Wides',
-            title="⚠️ Bowlers with Most Wide Balls",
-            color_continuous_scale='Oranges'
+        fig = px.scatter(
+            mom_counts, x='Player',y='Awards',size='Awards',color='Awards',text='Awards',
+            title="🏆 Top 10 Players with Most Player of the Match Awards",
+            color_continuous_scale='Viridis',
         )
         st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.warning("⚠️ 'player_of_match' column not found in matches dataset.")
+
 elif option == "Matches by City":
     city_count = matches['city'].value_counts().head(10).reset_index()
     city_count.columns = ['City', 'Matches']
@@ -140,6 +141,7 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
 
 
 
