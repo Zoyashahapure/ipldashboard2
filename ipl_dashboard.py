@@ -131,6 +131,27 @@ elif option == "Most Toss Wins":
         color_continuous_scale='Blues'
     )
     st.plotly_chart(fig, use_container_width=True)
+elif option == "Highest Score Teams":
+    if 'match_id' in deliveries.columns and 'batting_team' in deliveries.columns:
+        # Sum runs per team per match
+        team_scores = deliveries.groupby(['match_id', 'batting_team'])['total_runs'].sum().reset_index()
+        highest_scores = team_scores.groupby('batting_team')['total_runs'].max().sort_values(ascending=False).head(10).reset_index()
+        highest_scores.columns = ['Team', 'Highest_Score']
+        fig = px.bar(
+            highest_scores,
+            x='Highest_Score',
+            y='Team',
+            orientation='h',
+            text='Highest_Score',
+            title="💥 Top 10 Teams by Highest Score in a Match",
+            color='Highest_Score',
+            color_continuous_scale='Oranges'
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.warning("⚠️ Required columns not found in deliveries dataset.")
+    
 elif option == "Top Bowlers":
     if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
         wickets = (deliveries[deliveries['player_dismissed'].notnull()]
@@ -141,6 +162,7 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
 
 
 
