@@ -100,13 +100,11 @@ elif option == "Most Fours":
     
 elif option == "Most Wide Balls":
     if 'bowler' in deliveries.columns and 'wide_runs' in deliveries.columns:
-        # Calculate total wide balls per bowler
         wide_balls = (deliveries.groupby('bowler')['wide_runs']
                       .sum().sort_values(ascending=False).head(10).reset_index())
         wide_balls.columns = ['Bowler', 'Total_Wides']
         
-        # Plot chart
-        fig = px.scatter(
+        fig = px.bar(
             wide_balls, x='Total_Wides', y='Bowler', orientation='h',
             color='Total_Wides', text='Total_Wides',
             title="⚠️ Bowlers with Most Wide Balls",
@@ -142,6 +140,7 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
 
 
 
