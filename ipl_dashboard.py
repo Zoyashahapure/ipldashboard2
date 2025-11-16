@@ -97,7 +97,22 @@ elif option == "Most Fours":
     fig = px.bar(fours, x='Fours', y='Batsman', orientation='h', color='Fours',
                  text='Fours', title="💥 Most Fours", color_continuous_scale='Sunset')
     st.plotly_chart(fig, use_container_width=True)
-
+    
+elif option == "Most Wide Balls":
+    if 'bowler' in deliveries.columns and 'wide_runs' in deliveries.columns:
+        # Calculate total wide balls per bowler
+        wide_balls = (deliveries.groupby('bowler')['wide_runs']
+                      .sum().sort_values(ascending=False).head(10).reset_index())
+        wide_balls.columns = ['Bowler', 'Total_Wides']
+        
+        # Plot chart
+        fig = px.bar(
+            wide_balls, x='Total_Wides', y='Bowler', orientation='h',
+            color='Total_Wides', text='Total_Wides',
+            title="⚠️ Bowlers with Most Wide Balls",
+            color_continuous_scale='Oranges'
+        )
+        st.plotly_chart(fig, use_container_width=True)
 elif option == "Matches by City":
     city_count = matches['city'].value_counts().head(10).reset_index()
     city_count.columns = ['City', 'Matches']
@@ -127,3 +142,4 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
