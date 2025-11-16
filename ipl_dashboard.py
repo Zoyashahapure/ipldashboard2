@@ -100,7 +100,7 @@ elif option == "Most Fours":
     
 elif option == "Most Wide Balls":
     if 'bowler' in deliveries.columns and 'wide_runs' in deliveries.columns:
-        wide_balls = (deliveries.groupby('bowler')['wide_runs']
+        wide_balls = (deliveries.groupby('bowler')['wides']
                       .sum().sort_values(ascending=False).head(10).reset_index())
         wide_balls.columns = ['Bowler', 'Total_Wides']
         
@@ -140,6 +140,7 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
 
 
 
