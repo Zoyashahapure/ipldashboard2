@@ -31,7 +31,7 @@ with col2:
         unsafe_allow_html=True
     )
 
-# ---------- Load Data (Simple Version) ----------
+# ---------- Load Data ----------
 matches_url = "https://drive.google.com/uc?export=download&id=1ZCqwqbFRHdwHTCO4LWQezWB99LfynPJB"
 deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbzvVY5k4s-ffs6dVCVXK"
 
@@ -53,8 +53,11 @@ col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
 # ---------- Analysis Selection ----------
 option = st.selectbox(
     "Choose analysis:",
-    ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
-     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City"]
+    [
+        "Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
+        "Top Bowlers", "Most Sixes", "Most Fours",
+        "Matches by City", "Most Toss Wins"
+    ]
 )
 
 # ---------- Display Analysis Based on Selection ----------
@@ -115,3 +118,17 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
+
+# ---------- NEW: MOST TOSS WINS ----------
+elif option == "Most Toss Wins":
+    toss_wins = matches['toss_winner'].value_counts().head(10).reset_index()
+    toss_wins.columns = ['Team', 'Toss Wins']
+
+    fig = px.bar(
+        toss_wins, x='Toss Wins', y='Team',
+        orientation='h', color='Toss Wins',
+        text='Toss Wins',
+        title="🪙 Most Toss Wins",
+        color_continuous_scale='Blues'
+    )
+    st.plotly_chart(fig, use_container_width=True)
