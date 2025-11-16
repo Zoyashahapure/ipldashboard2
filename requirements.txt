@@ -4,5 +4,6 @@ matplotlib
 seaborn
 plotly
 gdown
+mysql-connector-python
 
 
