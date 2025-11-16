@@ -132,3 +132,7 @@ elif option == "Most Toss Wins":
         color_continuous_scale='Blues'
     )
     st.plotly_chart(fig, use_container_width=True)
+
+else:
+        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
+
