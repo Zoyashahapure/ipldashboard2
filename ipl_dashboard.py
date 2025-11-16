@@ -106,4 +106,12 @@ elif option == "Matches by City":
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Top Bowlers":
-    if 'player_dismissed'_
+    if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
+        wickets = (deliveries[deliveries['player_dismissed'].notnull()]
+                   .groupby('bowler').size().sort_values(ascending=False).head(5).reset_index())
+        wickets.columns = ['Bowler', 'Wickets']
+        fig = px.bar(wickets, x='Wickets', y='Bowler', orientation='h', color='Wickets',
+                     text='Wickets', color_continuous_scale='Agsunset')
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
