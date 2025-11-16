@@ -7,7 +7,7 @@ import mysql.connector
 # CONNECT TO RAILWAY MYSQL
 # -------------------------------
 conn = mysql.connector.connect(
-    host="mysql.railway.internal",   # replace with your Railway host
+    host="mysql://root:LOfnlnEOuUJwwkSWfYUuprcxFFadKxyk@shortline.proxy.rlwy.net:48619/railway",   # replace with your Railway host
     user="root",                        # replace with your Railway user
     password="LOfnlnEOuUJwwkSWfYUuprcxFFadKxyk",               # replace with your Railway password
     database="railway"                  # replace with your Railway database
@@ -166,3 +166,4 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
+
