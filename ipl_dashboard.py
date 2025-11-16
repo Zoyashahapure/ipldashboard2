@@ -106,7 +106,7 @@ elif option == "Most Wide Balls":
         wide_balls.columns = ['Bowler', 'Total_Wides']
         
         # Plot chart
-        fig = px.bar(
+        fig = px.scatter(
             wide_balls, x='Total_Wides', y='Bowler', orientation='h',
             color='Total_Wides', text='Total_Wides',
             title="⚠️ Bowlers with Most Wide Balls",
@@ -142,5 +142,6 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
 
 
