@@ -54,7 +54,7 @@ col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
 option = st.selectbox(
     "Choose analysis:",
     ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
-     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City","Most Toss Wins"]
+     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City","Most Toss Wins","Most Wide Balls"]
 )
 
 # ---------- Display Analysis Based on Selection ----------
@@ -142,4 +142,5 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
 
