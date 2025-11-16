@@ -1,5 +1,6 @@
 # ipldashboard2
 
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -33,23 +34,12 @@ with col2:
         unsafe_allow_html=True
     )
 
-# ---------- Load Data ----------
-@st.cache_data
-def load_data(url):
-    try:
-        return pd.read_csv(url)
-    except Exception as e:
-        st.error(f"Failed to load data: {e}")
-        return None
-
+# ---------- Load Data (Simple Version) ----------
 matches_url = "https://drive.google.com/uc?export=download&id=1ZCqwqbFRHdwHTCO4LWQezWB99LfynPJB"
 deliveries_url = "https://drive.google.com/uc?export=download&id=1kQXChtwZxkYrbzvVY5k4s-ffs6dVCVXK"
 
-matches = load_data(matches_url)
-deliveries = load_data(deliveries_url)
-
-if matches is None or deliveries is None:
-    st.stop()
+matches = pd.read_csv(matches_url)
+deliveries = pd.read_csv(deliveries_url)
 
 # ---------- Clean Data ----------
 matches.drop_duplicates(inplace=True)
@@ -67,7 +57,7 @@ col3.markdown(f"🏟️ **Unique Stadiums**: {matches['venue'].nunique()}")
 option = st.selectbox(
     "Choose analysis:",
     ["Select...", "Top 5 Teams", "Top Batsmen", "Top Stadiums",
-     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City"]
+     "Top Bowlers", "Most Sixes", "Most Fours", "Matches by City","Most Toss Wins"]
 )
 
 # ---------- Display Analysis Based on Selection ----------
@@ -90,8 +80,9 @@ elif option == "Top Batsmen":
 elif option == "Top Stadiums":
     stadium_wins = matches['venue'].value_counts().head(10).reset_index()
     stadium_wins.columns = ['Stadium', 'Matches']
-    fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',title=" 🏟️Top Stadiums",
-                 color='Matches', text='Matches', color_continuous_scale='OrRd')
+    fig = px.bar(stadium_wins, x='Matches', y='Stadium', orientation='h',
+                 title="🏟️ Top Stadiums", color='Matches',
+                 text='Matches', color_continuous_scale='OrRd')
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Most Sixes":
@@ -99,7 +90,7 @@ elif option == "Most Sixes":
     sixes = deliveries[deliveries['batsman_runs'] == 6][bat_col].value_counts().head(10).reset_index()
     sixes.columns = ['Batsman', 'Sixes']
     fig = px.bar(sixes, x='Sixes', y='Batsman', orientation='h', color='Sixes',
-                 title=" 💥Most Sixes",text='Sixes', color_continuous_scale='Pinkyl')
+                 title="💥 Most Sixes", text='Sixes', color_continuous_scale='Pinkyl')
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Most Fours":
@@ -107,7 +98,7 @@ elif option == "Most Fours":
     fours = deliveries[deliveries['batsman_runs'] == 4][bat_col].value_counts().head(10).reset_index()
     fours.columns = ['Batsman', 'Fours']
     fig = px.bar(fours, x='Fours', y='Batsman', orientation='h', color='Fours',
-                 text='Fours', title=" 💥Most Fours", color_continuous_scale='Sunset')
+                 text='Fours', title="💥 Most Fours", color_continuous_scale='Sunset')
     st.plotly_chart(fig, use_container_width=True)
 
 elif option == "Matches by City":
@@ -116,7 +107,19 @@ elif option == "Matches by City":
     fig = px.pie(city_count, names='City', values='Matches',
                  title="🗺️ Matches Hosted per City")
     st.plotly_chart(fig, use_container_width=True)
+    
+elif option == "Most Toss Wins":
+    toss_wins = matches['toss_winner'].value_counts().head(10).reset_index()
+    toss_wins.columns = ['Team', 'Toss Wins']
 
+    fig = px.bar(
+        toss_wins, x='Toss Wins', y='Team',
+        orientation='h', color='Toss Wins',
+        text='Toss Wins',
+        title="🪙 Most Toss Wins",
+        color_continuous_scale='Blues'
+    )
+    st.plotly_chart(fig, use_container_width=True)
 elif option == "Top Bowlers":
     if 'player_dismissed' in deliveries.columns and 'bowler' in deliveries.columns:
         wickets = (deliveries[deliveries['player_dismissed'].notnull()]
@@ -126,8 +129,7 @@ elif option == "Top Bowlers":
                      text='Wickets', color_continuous_scale='Agsunset')
         st.plotly_chart(fig, use_container_width=True)
     else:
-        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.")
-
+        st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
 
 
 
