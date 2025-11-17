@@ -5,7 +5,7 @@ import plotly.express as px
 # ---------- Page Setup ----------
 st.set_page_config(page_title="IPL Data Analysis Dashboard", layout="centered")
 
-# ---------- Basic CSS ----------
+# ---------- Basic styling ----------
 st.markdown(r"""
 <style>
 .stApp {
@@ -168,6 +168,7 @@ elif option == "Top Bowlers":
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("⚠️ Deliveries dataset missing required columns for bowlers.") 
+
 
 
 
